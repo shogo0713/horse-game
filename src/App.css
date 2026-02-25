@@ -1,24 +1,22 @@
 /* =========================
-   Slot UI (dark / calm)
+   Horse Bet UI (white + blue) - Layout v2
    ========================= */
 
-/* Theme tokens */
 :root{
-  --bg: #0b0c10;
-  --bg2: #0f111a;
-  --panel: rgba(255,255,255,0.06);
-  --panel2: rgba(255,255,255,0.10);
-  --border: rgba(255,255,255,0.12);
-  --text: rgba(255,255,255,0.92);
-  --muted: rgba(255,255,255,0.62);
-  --muted2: rgba(255,255,255,0.42);
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --text: #0f172a;
+  --muted: rgba(15,23,42,0.65);
+  --muted2: rgba(15,23,42,0.45);
+  --border: #e2e8f0;
 
-  --accent: #a78bfa;  /* 紫寄り */
-  --accent2: #22c55e; /* 緑寄り */
-  --danger: #ef4444;
+  --accent: #2563eb;
+  --accentHover: #1d4ed8;
+  --accentSoft: #dbeafe;
+  --accentSoft2:#e0f2fe;
 
-  --radius: 16px;
-  --shadow: 0 18px 60px rgba(0,0,0,0.55);
+  --radius: 18px;
+  --shadow: 0 14px 40px rgba(15,23,42,0.10);
 }
 
 *{ box-sizing: border-box; }
@@ -28,28 +26,26 @@ body{
   color: var(--text);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", Arial, sans-serif;
   background:
-    radial-gradient(1100px 650px at 20% 0%, #1a1730 0%, transparent 60%),
-    radial-gradient(900px 520px at 100% 25%, #10212a 0%, transparent 55%),
-    linear-gradient(180deg, var(--bg2), var(--bg));
+    radial-gradient(1100px 650px at 20% 0%, var(--accentSoft) 0%, transparent 60%),
+    radial-gradient(900px 520px at 100% 25%, var(--accentSoft2) 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg));
 }
 
-/* App shell */
 .app{
   min-height: 100vh;
-  padding: 24px 16px 40px;
+  padding: 56px 24px 80px;
   display: grid;
   place-items: start center;
 }
 
-/* Optional header area (if you add it later) */
 .header{
   width: 100%;
-  max-width: 860px;
-  margin-bottom: 14px;
-  padding: 14px 16px;
+  max-width: 980px;
+  margin-bottom: 18px;
+  padding: 18px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: rgba(10,10,14,0.50);
+  background: rgba(255,255,255,0.85);
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow);
 }
@@ -58,181 +54,221 @@ body{
   font-size: 18px;
   letter-spacing: .2px;
 }
-.header__sub{
-  margin-top: 6px;
-  font-size: 12px;
-  color: var(--muted2);
-}
 
-/* Card */
+/* Card = 3段レイアウト */
 .card{
   width: 92%;
-  max-width: 860px;
+  max-width: 980px;
   margin: 20px 0;
-  padding: 18px;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: var(--radius);
+  padding: 26px;
+  border-radius: calc(var(--radius) + 8px);
   border: 1px solid var(--border);
-  background: linear-gradient(180deg, var(--panel2), var(--panel));
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
   box-shadow: var(--shadow);
-}
 
-/* layout helpers */
-.row{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.stack{
   display: grid;
-  gap: 12px;
+  grid-template-rows: auto 1fr auto;
+  gap: 18px;
 }
 
-.text{
-  font-size: 14px;
-  color: var(--text);
+/* 上：情報バー（右上に所持コイン） */
+.topbar{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.label{
+.topbar__left{
+  display: grid;
+  gap: 6px;
+}
+
+.topbar__right{
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+}
+
+.kpiLabel{
   font-size: 12px;
   color: var(--muted);
 }
-.value{
-  font-size: 20px;
-  font-weight: 650;
+.kpiValue{
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: .2px;
 }
 
-/* Controls */
+/* Phase badge */
+.badge{
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text);
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.85);
+}
+
+/* 中央：結果パネル */
+.main{
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(219,234,254,0.40), rgba(255,255,255,0.90));
+  padding: 18px;
+
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.mainTitle{
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.finish{
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: .3px;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.payout{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(15,23,42,0.18);
+}
+
+.payout__label{ font-size: 13px; color: var(--muted); }
+.payout__value{ font-size: 26px; font-weight: 900; }
+
+/* 下：操作エリア（中央寄せ） */
+.bottom{
+  display: grid;
+  gap: 14px;
+}
+
+.controls{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.controls .row{
+  display: flex;
+  align-items: center;
+  gap: 12px;          /* 間隔 */
+  flex-wrap: nowrap;  /* 画面が狭い時に折り返したいなら wrap に */
+}
+
 input[type="number"], input[type="text"]{
-  width: 140px;
+  width: 170px;
   padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(0,0,0,0.25);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #ffffff;
   color: var(--text);
   outline: none;
 }
 
 input[type="number"]:focus, input[type="text"]:focus{
-  border-color: rgba(167,139,250,0.55);
-  box-shadow: 0 0 0 4px rgba(167,139,250,0.12);
+  border-color: rgba(37,99,235,0.65);
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.14);
 }
 
-.small{
+/* 馬選択（オッズを見やすく） */
+.race{
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button.runner{
+  background: #ffffff;
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: none;
+  border-radius: 14px;
+  padding: 10px 14px;
+
+  display: grid;
+  gap: 2px;
+  min-width: 160px;
+  text-align: left;
+}
+
+.runnerName{
+  font-weight: 900;
+}
+.runnerOdds{
   font-size: 12px;
-  color: var(--muted2);
+  color: var(--muted);
 }
 
-/* Buttons */
+button.runner:hover{
+  background: rgba(219,234,254,0.55);
+}
+
+button.runner--selected{
+  border-color: rgba(37,99,235,0.85);
+  background: rgba(219,234,254,0.75);
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
+}
+
+/* 下のボタンを中央に */
+.actions{
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
 button{
   appearance: none;
   border: 0;
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-weight: 700;
+  border-radius: 14px;
+  padding: 10px 16px;
+  font-weight: 800;
   letter-spacing: .2px;
-  color: #0b0c10;
-  background: linear-gradient(180deg, rgba(167,139,250,1), rgba(124,58,237,1));
-  box-shadow: 0 10px 24px rgba(124,58,237,0.22);
+
+  color: #ffffff;
+  background: var(--accent);
+  box-shadow: 0 12px 26px rgba(37,99,235,0.22);
+
   cursor: pointer;
-  transition: transform 120ms ease, filter 120ms ease, opacity 120ms ease;
+  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
 }
 
 button:hover{
   transform: translateY(-1px);
-  filter: brightness(1.04);
-}
-
-button:active{
-  transform: translateY(0px);
-  filter: brightness(0.98);
+  background: var(--accentHover);
 }
 
 button:disabled{
   cursor: not-allowed;
-  opacity: 0.45;
-  filter: grayscale(0.2);
+  background: rgba(219,234,254,1);
+  color: rgba(15,23,42,0.35);
   box-shadow: none;
 }
 
-/* Secondary button if you need it later */
-.button--ghost{
-  background: transparent;
-  color: var(--text);
-  border: 1px solid rgba(255,255,255,0.16);
-  box-shadow: none;
-}
-
-/* Slot display area (use later) */
-.slot{
-  display: grid;
-  gap: 10px;
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(0,0,0,0.18);
-}
-
-.reels{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.reel{
-  height: 74px;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  font-size: 34px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: radial-gradient(120px 80px at 50% 30%, rgba(255,255,255,0.10), rgba(0,0,0,0.10));
-}
-
-.badge{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  color: var(--text);
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.06);
-}
-
-/* Phases (optional): add class to card like `card drawing` */
-.card.drawing{
-  border-color: rgba(167,139,250,0.35);
-  box-shadow: 0 0 0 1px rgba(167,139,250,0.12), var(--shadow);
-}
-
-.spin-dot{
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(167,139,250,0.9);
-  box-shadow: 0 0 0 6px rgba(167,139,250,0.12);
-  animation: pulse 900ms ease-in-out infinite;
-}
-
-@keyframes pulse{
-  0%,100%{ transform: scale(0.9); opacity: 0.7; }
-  50%{ transform: scale(1.2); opacity: 1; }
-}
-
-/* Responsive tweaks */
+/* Responsive */
 @media (max-width: 520px){
-  input[type="number"], input[type="text"]{
-    width: 120px;
-  }
-  .reel{
-    height: 68px;
-    font-size: 30px;
-  }
+  .card{ padding: 20px; min-height: 380px; }
+  button.runner{ min-width: 140px; }
+  input[type="number"], input[type="text"]{ width: 150px; }
 }
+
+.spacer-8  { height: 8px; }
+.spacer-12 { height: 12px; }
+.spacer-16 { height: 16px; }
+.spacer-24 { height: 24px; }
