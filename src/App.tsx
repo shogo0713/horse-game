@@ -10,6 +10,29 @@ export default function App() {
   const [phase, setPhase] = useState<Phase>("IDLE");
   const [payout, setPayout] = useState(0);
 
+  // -------------------- 乱数用 --------------------
+
+  type Entry = { mult: number; w: number };
+
+  function weightedPick(table: Entry[]) {
+    const total = table.reduce((s, e) => s + e.w, 0);
+    let r = Math.random() * total;
+    for (const e of table) {
+      r -= e.w;
+      if (r <= 0) return e.mult;
+    }
+    return table[table.length - 1].mult;
+  }
+  
+  const payoutTable: Entry[] = [
+    { mult: 0.0, w: 55 }, // 55% で0
+    { mult: 0.5, w: 20 }, // 20% で半分返る
+    { mult: 1.0, w: 15 }, // 15% でトントン
+    { mult: 2.0, w: 8 },  // 8% で2倍
+    { mult: 5.0, w: 2 },  // 2% で5倍
+  ];
+
+  // ------------------------------------------------
 
 
   function spin() {
@@ -23,7 +46,7 @@ export default function App() {
     setPhase("DRAWING");
     
     setTimeout(() => {
-      const payout = Math.random() < 0.5 ? 0 : bet * 2;
+      const payout = Math.floor(bet * weightedPick(payoutTable));
       setPayout(payout);
       setPhase("PAYOUT") 
     }, 1000);
@@ -45,7 +68,7 @@ export default function App() {
       case "DRAWING":
         return "抽選中…";
       case "PAYOUT":
-        return "結果！ACCEPTで受け取り";
+        return "結果発表！";
     }
   }
 
