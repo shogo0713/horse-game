@@ -110,11 +110,18 @@ export default function App() {
     setBet(money.toString());
   }
 
+  // 所持金リセットボタン
+  function resetMoney() {
+    setMoney(5000);
+  }
+
   return (
     <div className="app">
       <div className="header">
         <h1 className="header__title">競馬ゲーム</h1>
+        <button className="header__sub" onClick={resetMoney}> お金リセット </button>
       </div>
+
 
       <div className="card">
         {/* 上：情報（右上に所持コイン） */}
@@ -134,11 +141,18 @@ export default function App() {
         <div className="main">
           <div>
             <div className="mainTitle">着順</div>
-            <div className="finish">
-              {result.length > 0
-                ? result.map((r, i) => `${i + 1}位 : ${r.name}`).join(", ")
-                : "—"}
-            </div>
+
+            {result.length > 0 ? (
+              <div className="finishLines">
+                {result.map((r, i) => (
+                  <div key={r.id} className="finishLine">
+                    {i + 1}位 : {r.name}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="finishEmpty">—</div>
+            )}
           </div>
 
           <div className="payout">
