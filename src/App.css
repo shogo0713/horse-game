@@ -188,6 +188,16 @@ input[type="number"]:focus, input[type="text"]:focus{
 
 /* 馬選択（オッズを見やすく） */
 .race{
+  display: grid;
+  gap: 8px;
+}
+
+.raceMessage{
+  font-size: 18px;
+  text-align: center;
+}
+
+.raceList{
   display: flex;
   gap: 12px;
   justify-content: center;
@@ -291,4 +301,32 @@ button:disabled{
 .finishLine:first-child{
   border-color: rgba(37,99,235,0.55);
   background: rgba(219,234,254,0.55);
+}
+
+.betType{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.9);
+}
+
+.betType select{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  outline: none;
+  min-width: 220px;
+}
+
+.betType select:focus{
+  border-color: rgba(37,99,235,0.65);
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.14);
 }

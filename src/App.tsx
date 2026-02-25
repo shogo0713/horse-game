@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 
 type Phase =  "IDLE" | "BETTING" | "DRAWING" | "PAYOUT";
+type BET = "WIN" | "PLACE";
 
 interface Runner {
   id  : string;
@@ -17,8 +18,9 @@ export default function App() {
   const [payout, setPayout] = useState(0);
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
   const [result, setResult] = useState<Runner[]>([]);
+  const [betType, setBetType] = useState<BET>("WIN");
 
-  // -------------------- 計算アルゴリズムたち --------------------
+  // -------------------- 順位計算アルゴリズムたち --------------------
 
   // 馬の配列から1頭決める
   function pickWinnerByOdds(runners: Runner[]): Runner {
@@ -45,8 +47,21 @@ export default function App() {
     return finish;
   }
 
-  // ------------------------------------------------------------
+  // -------------------- 配当計算アルゴリズムたち --------------------
 
+  function calculatePayout(bet: number, betType: BET, selected: Runner, result: Runner[]): number {
+    if (betType === "WIN") {
+      return (result[0].id === selected.id) ? Math.floor(bet * selected.odds) : 0;
+    } else if (betType === "PLACE") {
+      const placeOdds = 1 + (selected.odds - 1) * 0.2984; 
+      return (result.slice(0, 3).some(r => r.id === selected.id)) ? Math.floor(bet * placeOdds) : 0;
+    }
+    return 0;
+  }
+
+
+
+  // -------------------- メインのアルゴリズムたち --------------------
 
   // 固定の出走馬データ
   const runners: Runner[] = [
@@ -73,10 +88,7 @@ export default function App() {
     
     setTimeout(() => {
       const finishOrder = makeFinishOrder(runners);
-      const payout = (finishOrder[0].id === selectedRunner!.id)
-        ? Math.floor(bet * selectedRunner!.odds)
-        : 0;
-
+      const payout = calculatePayout(bet, betType, selectedRunner, finishOrder);
       setPayout(payout);
       setResult(finishOrder);
       setPhase("PAYOUT");
@@ -119,6 +131,7 @@ export default function App() {
     <div className="app">
       <div className="header">
         <h1 className="header__title">競馬ゲーム</h1>
+        <div className="spacer-16"/>
         <button className="header__sub" onClick={resetMoney}> お金リセット </button>
       </div>
 
@@ -187,21 +200,40 @@ export default function App() {
 
           <div className="spacer-16" />
 
+          <div className="betType">
+            <div className="label">賭け方 :</div>
+            <select value={betType} onChange={(e) => setBetType(e.target.value as BET)}>
+              <option value="WIN"  >単勝</option>
+              <option value="PLACE">複勝</option>
+            </select>
+          </div>
+
+          <div className="spacer-16" />
+
           <div className="race">
-            {runners.map((r) => (
-              <button
-                key={r.id}
-                className={
-                  selectedRunner?.id === r.id
-                    ? "runner runner--selected"
-                    : "runner"
-                }
-                onClick={() => setSelectedRunner(r)}
-              >
-                <div className="runnerName">{r.name}</div>
-                <div className="runnerOdds">Odds {r.odds.toFixed(1)}</div>
-              </button>
-            ))}
+
+            <div className="raceMessage">
+              {betType === "WIN" ? "単勝 : 1位予想の馬を選択してください" : "複勝 : 1-3位予想の馬を選択してください"}
+            </div>
+
+            <div className="spacer-8" />
+
+            <div className="raceList">
+              {runners.map((r) => (
+                <button
+                  key={r.id}
+                  className={
+                    selectedRunner?.id === r.id
+                      ? "runner runner--selected"
+                      : "runner"
+                  }
+                  onClick={() => setSelectedRunner(r)}
+                >
+                  <div className="runnerName">{r.name}</div>
+                  <div className="runnerOdds">Odds {r.odds.toFixed(1)}</div>
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="spacer-8" />
