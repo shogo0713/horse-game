@@ -18,6 +18,7 @@ export default function App() {
   const [payout, setPayout] = useState(0);
   const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null);
   const [result, setResult] = useState<Runner[]>([]);
+  const [previousResult, setPreviousResult] = useState<Runner[]>([]);
   const [betType, setBetType] = useState<BET>("WIN");
 
   // -------------------- 順位計算アルゴリズムたち --------------------
@@ -89,6 +90,7 @@ export default function App() {
     setTimeout(() => {
       const finishOrder = makeFinishOrder(runners);
       const payout = calculatePayout(bet, betType, selectedRunner, finishOrder);
+      setPreviousResult(result);
       setPayout(payout);
       setResult(finishOrder);
       setPhase("PAYOUT");
@@ -129,128 +131,118 @@ export default function App() {
 
   return (
     <div className="app">
-      <div className="header">
-        <h1 className="header__title">競馬ゲーム</h1>
-        <div className="spacer-16"/>
-        <button className="header__sub" onClick={resetMoney}> お金リセット </button>
-      </div>
 
-
-      <div className="card">
-        {/* 上：情報（右上に所持コイン） */}
-        <div className="topbar">
-          <div className="topbar__left">
-            <div className="label">Phase</div>
-            <div className="badge">{phaseMessage(phase)}</div>
-          </div>
-
-          <div className="topbar__right">
-            <div className="kpiLabel">所持金</div>
-            <div className="kpiValue">{money} 円</div>
-          </div>
+      {/* ヘッダー部分 */ }
+      <header>
+        <div className="header_inner">
+          <h1 className="header_title">競馬ゲーム</h1>
+          <button className="reset_button" onClick={resetMoney}>所持金リセット</button>
+          <h1 className="header_sub">所持金: <span className="money">{money}</span> 円</h1>
         </div>
+      </header>
 
-        {/* 中央：結果画面 */}
-        <div className="main">
-          <div>
+      {/* メイン部分 */ }
+      <main>
+        <div className="left_panel">
+
+          {/* 結果表示パネル */}
+          <div className="result_panel">
+
+            <div className="phaseMessage">現在 : {phaseMessage(phase)}</div>
             <div className="mainTitle">着順</div>
+            <div className="finishLines">
+              {runners.map((runner, i) => (
+                <div
+                  key={runner.id}
+                  className={
+                    phase === "PAYOUT" && selectedRunner?.id === result[i]?.id
+                      ? "finishLine finishLine--selected"
+                      : "finishLine"
+                  }
+                >
+                  <span className={`finishRank finishRank--${i + 1}`}>{i + 1}位:</span>
+                  <span className={`finishName finishName--${i + 1}`}>
+                    {phase === "PAYOUT" ? (result[i]?.name ?? "-") : "-"}
+                  </span>
+                </div>
+              ))}
+            </div>
 
-            {result.length > 0 ? (
-              <div className="finishLines">
-                {result.map((r, i) => (
-                  <div key={r.id} className="finishLine">
-                    {i + 1}位 : {r.name}
+            <div className="previous_result">
+              <div className="previous_result_title">前回結果</div>
+              <div className="previous_result_lines">
+                {runners.map((_, rank) => (
+                  <div key={rank} className="previous_result_line">
+                    {rank + 1}位: {previousResult[rank]?.name ?? "-"}
+                    {rank < runners.length - 1 ? " ," : ""}
                   </div>
                 ))}
               </div>
-            ) : (
-              <div className="finishEmpty">—</div>
-            )}
-          </div>
+            </div>
 
-          <div className="payout">
-            <div className="payout__label">獲得金額</div>
-            <div className="payout__value">{payout} 円</div>
           </div>
         </div>
-      </div>
 
-      <div className="card">
-        {/* 下：操作 */}
-        <div className="bottom">
-          <div className="controls">
-
+        <div className="right_panel">
+          {/* ベットパネル */ }
+          <div className="bet_panel">
+            <div className="mainTitle">ベット</div>
             <div className="row">
-
-              <div className="label">賭ける金額 :</div>
-              <input
-                type="number"
-                value={betstr}
-                onChange={(e) => setBet(e.target.value)}
-              />
-              <div className="label">円</div>
-
-              <button className="totalBetButton" onClick={setTotalBet}>
-                全額賭ける
-              </button>
-
-            </div>
-          
-          </div>
-
-          <div className="spacer-16" />
-
-          <div className="betType">
-            <div className="label">賭け方 :</div>
-            <select value={betType} onChange={(e) => setBetType(e.target.value as BET)}>
-              <option value="WIN"  >単勝</option>
-              <option value="PLACE">複勝</option>
-            </select>
-          </div>
-
-          <div className="spacer-16" />
-
-          <div className="race">
-
-            <div className="raceMessage">
-              {betType === "WIN" ? "単勝 : 1位予想の馬を選択してください" : "複勝 : 1-3位予想の馬を選択してください"}
-            </div>
-
-            <div className="spacer-8" />
-
-            <div className="raceList">
-              {runners.map((r) => (
-                <button
-                  key={r.id}
-                  className={
-                    selectedRunner?.id === r.id
-                      ? "runner runner--selected"
-                      : "runner"
-                  }
-                  onClick={() => setSelectedRunner(r)}
+              <div className="bet_panel_label">賭け方</div>
+                <select
+                  className="bet_panel_select"
+                  value={betType}
+                  disabled={phase !== "IDLE"}
+                  onChange={(e) => setBetType(e.target.value as BET)}
                 >
-                  <div className="runnerName">{r.name}</div>
-                  <div className="runnerOdds">Odds {r.odds.toFixed(1)}</div>
-                </button>
-              ))}
+                  <option value="WIN"  >単勝</option>
+                  <option value="PLACE">複勝</option>
+                </select>
+              </div>
+            <div>
+              <div className="bet_panel_label ">馬を選択</div>
+              <div className="bet_panel_race_list">
+                {runners.map((r) => (
+                  <button
+                    key={r.id}
+                    className={
+                      selectedRunner?.id === r.id
+                        ? "runner runner--selected"
+                        : "runner"
+                    }
+                    disabled={phase !== "IDLE"}
+                    onClick={() => setSelectedRunner(r)}
+                  >
+                    <div className="runnerName">{r.name}</div>
+                    <div className="runnerOdds">Odds {r.odds.toFixed(1)}</div>
+                  </button>
+                ))}
+              </div>
             </div>
+            <div className="row">
+              <div className="row">
+                <div className="bet_amount label">賭ける金額</div>
+                <input
+                  type="number"
+                  value={betstr}
+                  disabled={phase !== "IDLE"}
+                  onChange={(e) => setBet(e.target.value)}
+                />
+                <div className="bet_amount unit">円</div>
+              </div>
+              <button className="bet_panel_total_bet_button" disabled={phase !== "IDLE"} onClick={setTotalBet}>全額賭ける</button>
+            </div>
+            <button className="bet_panel_submit_button" disabled={phase !== "IDLE" || selectedRunner === null} onClick={go}>確定</button>
           </div>
 
-          <div className="spacer-8" />
-
-          <div className="actions">
-            <button
-              disabled={phase !== "IDLE" || selectedRunner === null}
-              onClick={go}
-            >
-              開始
-            </button>
-            <button disabled={phase !== "PAYOUT"} onClick={accept}>
-              受け取り
-            </button>
+          {/* 払い戻しパネル */}
+          <div className="payout_panel">            
+            <div className="payout_label">獲得金額</div>
+            <div className="payout_value">{payout} 円</div>
+            <button disabled={phase !== "PAYOUT"} onClick={accept}>受け取り</button>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

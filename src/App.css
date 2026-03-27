@@ -1,128 +1,141 @@
-/* =========================
-   Horse Bet UI (white + blue) - Layout v2
-   ========================= */
-
+/* 共通設定 */
 :root{
-  --bg: #ffffff;
-  --panel: #ffffff;
-  --text: #0f172a;
+  /* カラー変数 */
+  --bg: rgba(250, 250, 250, 1);
+  --text: rgba(0, 0, 0, 0.8);
   --muted: rgba(15,23,42,0.65);
-  --muted2: rgba(15,23,42,0.45);
-  --border: #e2e8f0;
-
-  --accent: #2563eb;
-  --accentHover: #1d4ed8;
-  --accentSoft: #dbeafe;
-  --accentSoft2:#e0f2fe;
-
+  --border: rgba(15,23,42,0.65);
+  --accent: rgba(37,99,235,0.85);
+  /* その他の変数 */
   --radius: 18px;
-  --shadow: 0 14px 40px rgba(15,23,42,0.10);
 }
 
+button{
+  appearance: none;
+  border: 1px solid var(--border);
+  padding: 10px;
+  letter-spacing: .2px;
+
+  color: var(--text);
+  background: var(--bg);
+
+  cursor: pointer;
+  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+}
+
+button:disabled{
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
+  pointer-events: none;
+}
+
+/* サイズの設定 */
 *{ box-sizing: border-box; }
 
+/* ボディの共通設定 */
 body{
   margin: 0;
   color: var(--text);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", Arial, sans-serif;
-  background:
-    radial-gradient(1100px 650px at 20% 0%, var(--accentSoft) 0%, transparent 60%),
-    radial-gradient(900px 520px at 100% 25%, var(--accentSoft2) 0%, transparent 55%),
-    linear-gradient(180deg, var(--bg), var(--bg));
+  background-color: var(--bg);
+  font-family:  'Noto Serif JP', system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", Arial, sans-serif;
 }
-
 .app{
   min-height: 100vh;
-  padding: 56px 24px 80px;
+  padding: 24px;
   display: grid;
-  place-items: start center;
+  place-items: center;
 }
 
-.header{
+/* ヘッダー部分 */
+header{
   width: 100%;
-  max-width: 980px;
-  margin-bottom: 18px;
-  padding: 18px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow);
-}
-.header__title{
-  margin: 0;
-  font-size: 18px;
-  letter-spacing: .2px;
+  padding: 15px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
 }
 
-/* Card = 3段レイアウト */
-.card{
-  width: 92%;
-  max-width: 980px;
-  margin: 20px 0;
-  padding: 26px;
-  border-radius: calc(var(--radius) + 8px);
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow);
-
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: 18px;
-}
-
-/* 上：情報バー（右上に所持コイン） */
-.topbar{
+.header_inner {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
   gap: 16px;
 }
 
-.topbar__left{
-  display: grid;
-  gap: 6px;
+.header_title{
+  margin: 0;
+  font-size: 40px;
+  letter-spacing: 2px;
 }
 
-.topbar__right{
-  display: grid;
-  justify-items: end;
-  gap: 6px;
+.header_sub {
+  margin: 0;
+  margin-left: auto;
+  font-size: 25px;
 }
 
-.kpiLabel{
-  font-size: 12px;
-  color: var(--muted);
-}
-.kpiValue{
-  font-size: 28px;
+.money{
+  font-size: 35px;
   font-weight: 900;
-  letter-spacing: .2px;
+  color: rgba(37,99,235,0.85);
 }
 
-/* Phase badge */
-.badge{
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  color: var(--text);
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.85);
+/* メイン部分 */
+main {
+  width: 100%;
+  max-width: 1800px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
 }
 
-/* 中央：結果パネル */
-.main{
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(219,234,254,0.40), rgba(255,255,255,0.90));
+.left_panel{
+  display: grid;
+  gap: 18px;
+}
+
+.right_panel{
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 24px;
+}
+
+.result_panel {
+  width: 100%;
   padding: 18px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.bet_panel {
+  width: 100%;
+  padding: 18px;
+  border: 1px solid var(--border);
+  background: var(--bg);
 
   display: grid;
   gap: 14px;
-  align-content: start;
+}
+
+.payout_panel {
+  width: 100%;
+  padding: 18px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+
+  display: grid;
+  gap: 14px;
+}
+
+/* 結果表示パネル */
+
+.phaseMessage{
+  font-size: 30px;
+  color: var(--text);
 }
 
 .mainTitle{
@@ -138,70 +151,182 @@ body{
   word-break: break-word;
 }
 
-.payout{
+.finishLines{
+  margin-top: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.finishLine{
+  font-size: 16px;
+  font-weight: 800;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  padding-top: 8px;
-  border-top: 1px dashed rgba(15,23,42,0.18);
+  gap: 8px;
 }
 
-.payout__label{ font-size: 13px; color: var(--muted); }
-.payout__value{ font-size: 26px; font-weight: 900; }
+.finishLine--selected{
+  background: rgba(219,234,254,0.9);
+}
 
-/* 下：操作エリア（中央寄せ） */
-.bottom{
+.finishRank{
+  display: inline-block;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.finishName{
+  color: rgba(0, 0, 0, 0.9);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.finishRank--1{
+  color: rgba(191, 141, 0, 1);
+  font-size: 22px;
+}
+
+.finishName--1{
+  color: var(--text);
+  font-size: 22px;
+}
+
+.finishRank--2{
+  color: rgba(122, 130, 146, 1);
+  font-size: 20px;
+}
+
+.finishName--2{
+  color: var(--text);
+  font-size: 20px;
+}
+
+.finishRank--3{
+  color: rgba(158, 92, 56, 1);
+  font-size: 18px;
+}
+
+.finishName--3{
+  color: var(--text);
+  font-size: 18px;
+}
+
+.finishRank--4,
+.finishRank--5,
+.finishRank--6,
+.finishRank--7{
+  color: var(--text);
+  font-size: 16px;
+}
+
+.previous_result{
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
   display: grid;
-  gap: 14px;
+  gap: 6px;
 }
 
-.controls{
+.previous_result_title{
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.previous_result_lines {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
+  flex-direction: row;
+  gap: 12px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-.controls .row{
+.previous_result_line {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* ベットパネル */
+.bet_amount .label {
+  font-size: 15px;
+  color: var(--text);
+}
+
+.bet_amount .unit {
+  font-size: 15px;
+  color: var(--text);
+}
+
+.bet_panel_select {
+  width: 70%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  margin-left: auto;
+}
+
+.bet_panel_select:focus {
+  border-color: var(--accent);
+}
+
+.bet_panel_race_list {
+  margin: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.row {
   display: flex;
   align-items: center;
-  gap: 12px;          /* 間隔 */
-  flex-wrap: nowrap;  /* 画面が狭い時に折り返したいなら wrap に */
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-input[type="number"], input[type="text"]{
-  width: 170px;
+.row input[type="number"] {
+  flex: 1;
   padding: 10px 12px;
-  border-radius: 14px;
   border: 1px solid var(--border);
-  background: #ffffff;
+  border-radius: 12px;
+  background: var(--bg);
   color: var(--text);
   outline: none;
 }
 
-input[type="number"]:focus, input[type="text"]:focus{
-  border-color: rgba(37,99,235,0.65);
-  box-shadow: 0 0 0 4px rgba(37,99,235,0.14);
+.row input[type="number"]:focus {
+  border-color: var(--accent);
 }
 
-/* 馬選択（オッズを見やすく） */
-.race{
-  display: grid;
-  gap: 8px;
+.bet_panel_total_bet_button {
+  width: 30%;
+  padding: 10px 12px;
+  font-size: 13px;
+  margin-left: auto;
 }
 
-.raceMessage{
-  font-size: 18px;
-  text-align: center;
+.bet_panel_submit_button {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  font-weight: 700;
 }
 
-.raceList{
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
+.bet_panel_submit_button:hover{
+  opacity: 0.92;
+}
+
+.bet_panel_submit_button:disabled{
+  background: rgba(37,99,235,0.4);
+  border-color: rgba(37,99,235,0.4);
+  color: rgba(255,255,255,0.85);
 }
 
 button.runner{
@@ -210,12 +335,31 @@ button.runner{
   border: 1px solid var(--border);
   box-shadow: none;
   border-radius: 14px;
-  padding: 10px 14px;
+  padding: 8px 10px;
 
   display: grid;
   gap: 2px;
-  min-width: 160px;
+  min-width: 0;
+  width: 100%;
   text-align: left;
+}
+
+button.runner--selected{
+  border-color: var(--accent);
+  background: rgba(219,234,254,0.9);
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.12);
+  transform: translateY(-1px);
+}
+
+button.runner:hover{
+  background: rgba(219,234,254,0.55);
+}
+
+button.runner:disabled{
+  background: rgba(15,23,42,0.05);
+  color: rgba(15,23,42,0.3);
+  border-color: rgba(15,23,42,0.05);
+  cursor: not-allowed;
 }
 
 .runnerName{
@@ -226,107 +370,34 @@ button.runner{
   color: var(--muted);
 }
 
-button.runner:hover{
-  background: rgba(219,234,254,0.55);
-}
+/* 払い戻しパネル */
 
-button.runner--selected{
-  border-color: rgba(37,99,235,0.85);
-  background: rgba(219,234,254,0.75);
-  box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
-}
-
-/* 下のボタンを中央に */
-.actions{
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-
-button{
-  appearance: none;
-  border: 0;
-  border-radius: 14px;
-  padding: 10px 16px;
-  font-weight: 800;
-  letter-spacing: .2px;
-
-  color: #ffffff;
-  background: var(--accent);
-  box-shadow: 0 12px 26px rgba(37,99,235,0.22);
-
-  cursor: pointer;
-  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
-}
-
-button:hover{
-  transform: translateY(-1px);
-  background: var(--accentHover);
-}
-
-button:disabled{
-  cursor: not-allowed;
-  background: rgba(219,234,254,1);
-  color: rgba(15,23,42,0.35);
-  box-shadow: none;
-}
-
-/* Responsive */
-@media (max-width: 520px){
-  .card{ padding: 20px; min-height: 380px; }
-  button.runner{ min-width: 140px; }
-  input[type="number"], input[type="text"]{ width: 150px; }
-}
-
-.spacer-8  { height: 8px; }
-.spacer-12 { height: 12px; }
-.spacer-16 { height: 16px; }
-.spacer-24 { height: 24px; }
-
-.finishLines{
-  margin-top: 10px;
-  display: grid;
-  gap: 6px;           /* 行間 */
-}
-
-.finishLine{
-  font-size: 16px;
-  font-weight: 800;
-  padding: 8px 10px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.9);
-}
-
-.finishLine:first-child{
-  border-color: rgba(37,99,235,0.55);
-  background: rgba(219,234,254,0.55);
-}
-
-.betType{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: rgba(255,255,255,0.9);
-}
-
-.betType select{
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: #fff;
+.payout_panel .payout_label {
+  font-size: 13px;
   color: var(--text);
-  outline: none;
-  min-width: 220px;
 }
 
-.betType select:focus{
-  border-color: rgba(37,99,235,0.65);
-  box-shadow: 0 0 0 4px rgba(37,99,235,0.14);
+.payout_panel .payout_value {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
 }
+
+.payout_panel button{
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.payout_panel button:hover{
+  opacity: 0.92;
+}
+
+.payout_panel button:disabled{
+  background: rgba(37,99,235,0.4);
+  border-color: rgba(37,99,235,0.4);
+  color: rgba(255,255,255,0.85);
+}
+
+
