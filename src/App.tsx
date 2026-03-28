@@ -66,13 +66,14 @@ export default function App() {
 
   // 固定の出走馬データ
   const runners: Runner[] = [
-    { id: "1", name: "絶対勝つウマ", odds: 1.2 },
-    { id: "2", name: "ウマウマ", odds: 2.0 },
-    { id: "3", name: "高層ビル", odds: 3.0 },
-    { id: "4", name: "中立マン", odds: 5.0 },
-    { id: "5", name: "バッファ", odds: 10.0 },
+    { id: "1", name: "フェニックス", odds: 1.2 },
+    { id: "2", name: "ストームエッジ", odds: 2.0 },
+    { id: "3", name: "サンダーボルト", odds: 3.0 },
+    { id: "4", name: "花鳥風月", odds: 5.0 },
+    { id: "5", name: "ナイトメア", odds: 10.0 },
     { id: "6", name: "スカイライン", odds: 10.0 },
-    { id: "7", name: "エクスプレス", odds: 20.0 }
+    { id: "7", name: "エクスプレス", odds: 20.0 },
+    { id: "8", name: "漆黒", odds: 25.0 },
   ]
 
   // 一度のレースの流れを管理する関数
