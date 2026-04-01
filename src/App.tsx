@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./App.css";
 
+import { runners } from "./data/runners";
+
 import { BET, Phase, Runner } from "./types/game";
 import { makeFinishOrder } from "./logic/race"
 import { calculatePayout } from "./logic/payout";
@@ -24,18 +26,6 @@ export default function App() {
 
 
   // -------------------- メインのアルゴリズムたち --------------------
-
-  // 固定の出走馬データ
-  const runners: Runner[] = [
-    { id: "1", name: "フェニックス", odds: 1.2 },
-    { id: "2", name: "ストームエッジ", odds: 2.0 },
-    { id: "3", name: "サンダーボルト", odds: 3.0 },
-    { id: "4", name: "花鳥風月", odds: 5.0 },
-    { id: "5", name: "ナイトメア", odds: 10.0 },
-    { id: "6", name: "スカイライン", odds: 10.0 },
-    { id: "7", name: "エクスプレス", odds: 20.0 },
-    { id: "8", name: "漆黒", odds: 25.0 },
-  ]
 
   // 一度のレースの流れを管理する関数
   function go() {
@@ -76,7 +66,6 @@ export default function App() {
   function resetMoney() {
     setMoney(5000);
   }
-
 
   return (
     <div className="app">
@@ -127,7 +116,7 @@ export default function App() {
 
         </div>
       </main>
-      
+
     </div>
   );
 }

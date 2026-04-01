@@ -1,5 +1,7 @@
 import type { BET, Phase, Runner } from "../types/game";
 
+import RunnerButton from "./RunnerButton";
+
 type BetPanelProps = {
     betType: BET;
     phase: Phase;
@@ -15,7 +17,7 @@ type BetPanelProps = {
 
 export default function BetPanel({ betType, phase, betstr, selectedRunner, runners, onChangeBetType, onChangeBet, onSelectRunner, onSetTotalBet, onSubmit }: BetPanelProps) {
     return (
-          <div className="bet_panel">
+        <div className="bet_panel">
             <div className="mainTitle">ベット</div>
             <div className="row">
               <div className="bet_panel_label">賭け方</div>
@@ -33,19 +35,13 @@ export default function BetPanel({ betType, phase, betstr, selectedRunner, runne
               <div className="bet_panel_label ">馬を選択</div>
               <div className="bet_panel_race_list">
                 {runners.map((r) => (
-                  <button
-                    key={r.id}
-                    className={
-                      selectedRunner?.id === r.id
-                        ? "runner runner--selected"
-                        : "runner"
-                    }
-                    disabled={phase !== "IDLE"}
-                    onClick={() => onSelectRunner(r)}
-                  >
-                    <div className="runnerName">{r.name}</div>
-                    <div className="runnerOdds">Odds {r.odds.toFixed(1)}</div>
-                  </button>
+                    <RunnerButton
+                        key={r.id}
+                        runner={r}
+                        isSelected={selectedRunner?.id === r.id}
+                        disabled={phase !== "IDLE"}
+                        onClick={() => onSelectRunner(r)}
+                    />
                 ))}
               </div>
             </div>
