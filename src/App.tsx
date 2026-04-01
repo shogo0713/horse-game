@@ -1,14 +1,15 @@
 import { useState } from "react";
 import "./App.css";
 
-type Phase =  "IDLE" | "BETTING" | "DRAWING" | "PAYOUT";
-type BET = "WIN" | "PLACE";
+import { BET, Phase, Runner } from "./types/game";
+import { makeFinishOrder } from "./logic/race"
+import { calculatePayout } from "./logic/payout";
 
-interface Runner {
-  id  : string;
-  name: string;
-  odds: number;
-}
+import Header from "./components/Header";
+import ResultPanel from "./components/ResultPanel";
+import BetPanel from "./components/BetPanel";
+import PayoutPanel from "./components/PayoutPanel";
+
 
 export default function App() {
 
@@ -20,46 +21,6 @@ export default function App() {
   const [result, setResult] = useState<Runner[]>([]);
   const [previousResult, setPreviousResult] = useState<Runner[]>([]);
   const [betType, setBetType] = useState<BET>("WIN");
-
-  // -------------------- 順位計算アルゴリズムたち --------------------
-
-  // 馬の配列から1頭決める
-  function pickWinnerByOdds(runners: Runner[]): Runner {
-    const weights = runners.map(r => 1 / r.odds);
-    const total = weights.reduce((s, w) => s + w, 0);
-    let r = Math.random() * total;
-    for (let i = 0; i < runners.length; i++) {
-      r -= weights[i];
-      if (r <= 0) return runners[i];
-    }
-    return runners[runners.length - 1];
-  }
-
-  // 馬の順位を決める
-  function makeFinishOrder(runners: Runner[]): Runner[] {
-    let pool = [...runners];
-    const finish: Runner[] = [];
-
-    while (pool.length > 0) {
-      const winner = pickWinnerByOdds(pool);
-      finish.push(winner);
-      pool = pool.filter(r => r.id !== winner.id);
-    } 
-    return finish;
-  }
-
-  // -------------------- 配当計算アルゴリズムたち --------------------
-
-  function calculatePayout(bet: number, betType: BET, selected: Runner, result: Runner[]): number {
-    if (betType === "WIN") {
-      return (result[0].id === selected.id) ? Math.floor(bet * selected.odds) : 0;
-    } else if (betType === "PLACE") {
-      const placeOdds = 1 + (selected.odds - 1) * 0.2984; 
-      return (result.slice(0, 3).some(r => r.id === selected.id)) ? Math.floor(bet * placeOdds) : 0;
-    }
-    return 0;
-  }
-
 
 
   // -------------------- メインのアルゴリズムたち --------------------
@@ -106,20 +67,6 @@ export default function App() {
     setPhase("IDLE");
   }
 
-  // フェーズに応じたメッセージを返す関数
-  function phaseMessage(phase: Phase): string {
-    switch (phase) {
-      case "IDLE":
-        return "抽選前";
-      case "BETTING":
-        return "賭け中";
-      case "DRAWING":
-        return "抽選中…";
-      case "PAYOUT":
-        return "結果発表！";
-    }
-  }
-
   // 全額賭けるボタン
   function setTotalBet() {
     setBet(money.toString());
@@ -130,120 +77,57 @@ export default function App() {
     setMoney(5000);
   }
 
+
   return (
     <div className="app">
+      
+      {/* ヘッダー部分 */}
+      <Header
+        money={money}
+        onResetMoney={resetMoney}
+      />
 
-      {/* ヘッダー部分 */ }
-      <header>
-        <div className="header_inner">
-          <h1 className="header_title">競馬ゲーム</h1>
-          <button className="reset_button" onClick={resetMoney}>所持金リセット</button>
-          <h1 className="header_sub">所持金: <span className="money">{money}</span> 円</h1>
-        </div>
-      </header>
-
-      {/* メイン部分 */ }
+      {/* メイン部分 */}
       <main>
         <div className="left_panel">
 
           {/* 結果表示パネル */}
-          <div className="result_panel">
+          <ResultPanel
+            phase={phase}
+            runners={runners}
+            result={result}
+            previousResult={previousResult}
+            selectedRunner={selectedRunner}
+          />
 
-            <div className="phaseMessage">現在 : {phaseMessage(phase)}</div>
-            <div className="mainTitle">着順</div>
-            <div className="finishLines">
-              {runners.map((runner, i) => (
-                <div
-                  key={runner.id}
-                  className={
-                    phase === "PAYOUT" && selectedRunner?.id === result[i]?.id
-                      ? "finishLine finishLine--selected"
-                      : "finishLine"
-                  }
-                >
-                  <span className={`finishRank finishRank--${i + 1}`}>{i + 1}位:</span>
-                  <span className={`finishName finishName--${i + 1}`}>
-                    {phase === "PAYOUT" ? (result[i]?.name ?? "-") : "-"}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div className="previous_result">
-              <div className="previous_result_title">前回結果</div>
-              <div className="previous_result_lines">
-                {runners.map((_, rank) => (
-                  <div key={rank} className="previous_result_line">
-                    {rank + 1}位: {previousResult[rank]?.name ?? "-"}
-                    {rank < runners.length - 1 ? " ," : ""}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-          </div>
         </div>
 
         <div className="right_panel">
+
           {/* ベットパネル */ }
-          <div className="bet_panel">
-            <div className="mainTitle">ベット</div>
-            <div className="row">
-              <div className="bet_panel_label">賭け方</div>
-                <select
-                  className="bet_panel_select"
-                  value={betType}
-                  disabled={phase !== "IDLE"}
-                  onChange={(e) => setBetType(e.target.value as BET)}
-                >
-                  <option value="WIN"  >単勝</option>
-                  <option value="PLACE">複勝</option>
-                </select>
-              </div>
-            <div>
-              <div className="bet_panel_label ">馬を選択</div>
-              <div className="bet_panel_race_list">
-                {runners.map((r) => (
-                  <button
-                    key={r.id}
-                    className={
-                      selectedRunner?.id === r.id
-                        ? "runner runner--selected"
-                        : "runner"
-                    }
-                    disabled={phase !== "IDLE"}
-                    onClick={() => setSelectedRunner(r)}
-                  >
-                    <div className="runnerName">{r.name}</div>
-                    <div className="runnerOdds">Odds {r.odds.toFixed(1)}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="row">
-              <div className="row">
-                <div className="bet_amount label">賭ける金額</div>
-                <input
-                  type="number"
-                  value={betstr}
-                  disabled={phase !== "IDLE"}
-                  onChange={(e) => setBet(e.target.value)}
-                />
-                <div className="bet_amount unit">円</div>
-              </div>
-              <button className="bet_panel_total_bet_button" disabled={phase !== "IDLE"} onClick={setTotalBet}>全額賭ける</button>
-            </div>
-            <button className="bet_panel_submit_button" disabled={phase !== "IDLE" || selectedRunner === null} onClick={go}>確定</button>
-          </div>
+          <BetPanel
+            betType={betType}
+            phase={phase}
+            betstr={betstr}
+            selectedRunner={selectedRunner}
+            runners={runners}
+            onChangeBetType={setBetType}
+            onChangeBet={setBet}
+            onSelectRunner={setSelectedRunner}
+            onSetTotalBet={setTotalBet}
+            onSubmit={go}
+          />
 
           {/* 払い戻しパネル */}
-          <div className="payout_panel">            
-            <div className="payout_label">獲得金額</div>
-            <div className="payout_value">{payout} 円</div>
-            <button disabled={phase !== "PAYOUT"} onClick={accept}>受け取り</button>
-          </div>
+          <PayoutPanel
+            payout={payout}
+            phase={phase}
+            onAccept={accept}
+          />
+
         </div>
       </main>
+      
     </div>
   );
 }
