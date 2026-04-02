@@ -8,10 +8,11 @@ import { calculatePayout } from "../logic/payout";
 export function useHorseGame() {
   const [money, setMoney] = useState(5000);
   const [betstr, setBet] = useState("300");
-  const [phase, setPhase] = useState<Phase>("IDLE");
+  const [phase, setPhase] = useState<Phase>("BETTING");
   const [payout, setPayout] = useState(0);
-  const [selectedRunner, setSelectedRunner] = useState<Runner | null>(null); // 単勝・複勝 選択用
+  const [oneSelectedRunner, setSelectedRunner] = useState<Runner | null>(null); // 単勝・複勝 選択用
   const [TrioSelectedRunner, setTrioSelectedRunner] = useState<Runner[]>([]); // 3連複 選択用
+  const [TrifectaSelectedRunner, setTrifectaSelectedRunner] = useState<Runner[]>([]); // 3連単 選択用
   const [result, setResult] = useState<Runner[]>([]);
   const [previousResult, setPreviousResult] = useState<Runner[]>([]);
   const [betType, setBetType] = useState<BET>("WIN");
@@ -37,11 +38,30 @@ export function useHorseGame() {
     });
   }
 
+  function toggleTrifectaSelectedRunner(runner: Runner) {
+    setTrifectaSelectedRunner((prev) => {
+      // すでに選ばれているか？
+      const exists = prev.some((r) => r.id === runner.id);
+
+      // 選ばれていたら → 解除
+      if (exists) {
+        return prev.filter((r) => r.id !== runner.id);
+      }
+
+      // まだ3頭未満なら → 追加
+      if (prev.length < 3) {
+        return [...prev, runner];
+      }
+
+      // 3頭すでに選ばれていたら → 何もしない
+      return prev;
+    });
+  }
 
   function go() {
   
     // ----- 抽選前 -----
-    if (phase !== "IDLE") return;
+    if (phase !== "BETTING") return;
 
     // 入力のエラーチェック
     const bet = Number(betstr);
@@ -54,11 +74,15 @@ export function useHorseGame() {
       setErrorMessage("所持金が不足しています。");
       return;
     }
-    if (betType !== "TRIO" && selectedRunner === null) {
+    if ((betType === "WIN" || betType === "PLACE") && oneSelectedRunner === null) {
       setErrorMessage("馬を選択してください。");
       return;
     }
     if (betType === "TRIO" && TrioSelectedRunner.length !== 3) {
+      setErrorMessage("3匹の馬を選択してください。");
+      return;
+    }
+    if (betType === "TRIFECTA" && TrifectaSelectedRunner.length !== 3) {
       setErrorMessage("3匹の馬を選択してください。");
       return;
     }
@@ -69,7 +93,8 @@ export function useHorseGame() {
 
     setTimeout(() => {
       const finishOrder = makeFinishOrder(runners);
-      const payout = calculatePayout(bet, betType, selectedRunner, TrioSelectedRunner, finishOrder);
+      const threeSelected = betType === "TRIO" ? TrioSelectedRunner : TrifectaSelectedRunner;
+      const payout = calculatePayout(bet, betType, oneSelectedRunner, threeSelected, finishOrder);
 
       setPreviousResult(result);
       setPayout(payout);
@@ -82,7 +107,7 @@ export function useHorseGame() {
     if (phase !== "PAYOUT") return;
     setMoney((prev) => prev + payout);
     setPayout(0);
-    setPhase("IDLE");
+    setPhase("BETTING");
   }
 
   function setTotalBet() {
@@ -100,8 +125,9 @@ export function useHorseGame() {
     betstr,
     phase,
     payout,
-    selectedRunner,
+    selectedRunner: oneSelectedRunner,
     TrioSelectedRunner: TrioSelectedRunner,
+    TrifectaSelectedRunner: TrifectaSelectedRunner,
     result,
     previousResult,
     betType,
@@ -111,6 +137,7 @@ export function useHorseGame() {
     setBetType,
     setSelectedRunner,
     toggleTrioSelectedRunner,
+    toggleTrifectaSelectedRunner,
     go,
     accept,
     setTotalBet,

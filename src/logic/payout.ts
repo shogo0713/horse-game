@@ -8,6 +8,8 @@ export function calculatePayout(bet: number, betType: BET, selected: Runner | nu
         return calculatePlacePayout(bet, selected, result);
     } else if (betType === "TRIO") {
         return calculateTrioPayout(bet, threeSelected, result);
+    } else if (betType === "TRIFECTA") {
+        return calculateTrifectaPayout(bet, threeSelected, result);
     }
     return 0;
 }
@@ -25,7 +27,7 @@ function calculatePlacePayout(bet: number, selected: Runner | null, result: Runn
     return (result.slice(0, 3).some(r => r.id === selected.id)) ? Math.floor(placeOdds * bet) : 0;
 }
 
-// 3連単計算
+// 3連復計算
 function calculateTrioPayout(bet: number, threeSelected: Runner[], result: Runner[]): number {
   if (threeSelected.length !== 3) return 0;
 
@@ -41,4 +43,23 @@ function calculateTrioPayout(bet: number, threeSelected: Runner[], result: Runne
   const isHit = selectedIds.every((id, i) => id === top3Ids[i]);
 
   return isHit ? Math.floor(trioOdds * bet) : 0;
+}
+
+// 3連単計算
+function calculateTrifectaPayout(bet: number, threeSelected: Runner[], result: Runner[]): number {
+  if (threeSelected.length !== 3) return 0;
+
+  const trifectaOdds =
+    10 +
+    (threeSelected[0].odds - 1) * 0.5 +
+    (threeSelected[1].odds - 1) * 0.3 +
+    (threeSelected[2].odds - 1) * 0.2;
+
+  const selectedIds = threeSelected.map((r) => r.id);
+  const top3Ids = result.slice(0, 3).map((r) => r.id);
+
+  const isHit = selectedIds.every((id, i) => id === top3Ids[i]);
+
+  return isHit ? Math.floor(trifectaOdds * bet) : 0;
+
 }

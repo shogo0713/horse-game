@@ -17,6 +17,7 @@ export default function App() {
     payout,
     selectedRunner,
     TrioSelectedRunner,
+    TrifectaSelectedRunner,
     result,
     previousResult,
     betType,
@@ -25,6 +26,7 @@ export default function App() {
     setBetType,
     setSelectedRunner,
     toggleTrioSelectedRunner,
+    toggleTrifectaSelectedRunner,
     go,
     accept,
     setTotalBet,
@@ -51,8 +53,9 @@ export default function App() {
             runners={runners}
             result={result}
             previousResult={previousResult}
-            selectedRunner={selectedRunner}
+            oneSelectedRunner={selectedRunner}
             trioSelectedRunner={TrioSelectedRunner}
+            trifectaSelectedRunner={TrifectaSelectedRunner}
           />
 
         </div>
@@ -70,13 +73,15 @@ export default function App() {
             betType={betType}
             phase={phase}
             betstr={betstr}
-            selectedRunner={selectedRunner}
+            oneSelectedRunner={selectedRunner}
             trioSelectedRunner={TrioSelectedRunner}
+            trifectaSelectedRunner={TrifectaSelectedRunner}
             runners={runners}
             onChangeBetType={setBetType}
             onChangeBet={setBet}
             onSelectRunner={setSelectedRunner}
-            onSetTrioSelectedRunner={toggleTrioSelectedRunner}
+            toggleTrioSelectedRunner={toggleTrioSelectedRunner}
+            toggleTrifectaSelectedRunner={toggleTrifectaSelectedRunner}
             onSetTotalBet={setTotalBet}
             onSubmit={go}
           />

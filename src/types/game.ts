@@ -1,5 +1,5 @@
-export type Phase =  "IDLE" | "BETTING" | "DRAWING" | "PAYOUT";
-export type BET = "WIN" | "PLACE" | "TRIO";
+export type Phase = "BETTING" | "DRAWING" | "PAYOUT";
+export type BET = "WIN" | "PLACE" | "TRIO" | "TRIFECTA";
 
 export interface Runner {
   id  : string;

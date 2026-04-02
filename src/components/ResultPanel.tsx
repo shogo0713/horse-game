@@ -6,16 +6,15 @@ type ResultPanelProps = {
     runners: Runner[];
     result: Runner[];
     previousResult: Runner[];
-    selectedRunner: Runner | null;
-    trioSelectedRunner: Runner[] | null;
+    oneSelectedRunner: Runner | null;
+    trioSelectedRunner: Runner[];
+    trifectaSelectedRunner: Runner[];
 }
 
 function phaseMessage(phase: Phase): string {
     switch (phase) {
-        case "IDLE":
-            return "抽選前";
         case "BETTING":
-            return "賭け中";
+            return "ベット受付中!!";
         case "DRAWING":
             return "抽選中…";
         case "PAYOUT":
@@ -24,13 +23,15 @@ function phaseMessage(phase: Phase): string {
 }
 
 
-export default function ResultPanel({ phase, runners, result, previousResult, selectedRunner, trioSelectedRunner, betType }: ResultPanelProps) {
+export default function ResultPanel({ phase, runners, result, previousResult, oneSelectedRunner, trioSelectedRunner, trifectaSelectedRunner, betType }: ResultPanelProps) {
   const selectedIds =
     betType === "WIN" || betType === "PLACE"
-      ? selectedRunner
-        ? [selectedRunner.id]
+      ? oneSelectedRunner
+        ? [oneSelectedRunner.id]
         : []
-      : trioSelectedRunner?.map((runner) => runner.id);
+      : betType === "TRIO"
+        ? trioSelectedRunner.map((runner) => runner.id)
+        : trifectaSelectedRunner.map((runner) => runner.id);
 
     return (
         <div className="result_panel">
@@ -42,13 +43,13 @@ export default function ResultPanel({ phase, runners, result, previousResult, se
                 <div
                 key={runner.id}
                 className={
-                    phase === "PAYOUT" && (selectedIds?.includes(result[i].id))
+                    phase === "PAYOUT" && (selectedIds?.includes(result?.[i]?.id))
                         ? "finishLine finishLine--selected"
                         : "finishLine"
                 }>
                     <span className={`finishRank finishRank--${i + 1}`}>{i + 1}位:</span>
                     <span className={`finishName finishName--${i + 1}`}>
-                    {phase === "PAYOUT" ? (result[i]?.name ?? "-") : "-"}
+                    {phase === "PAYOUT" ? (result?.[i]?.name ?? "-") : "-"}
                     </span>
                 </div>
             ))}
@@ -59,7 +60,7 @@ export default function ResultPanel({ phase, runners, result, previousResult, se
                 <div className="previous_result_lines">
                 {runners.map((_, rank) => (
                     <div key={rank} className="previous_result_line">
-                    {rank + 1}位: {previousResult[rank]?.name ?? "-"}
+                    {rank + 1}位: {previousResult?.[rank]?.name ?? "-"}
                     {rank < runners.length - 1 ? " ," : ""}
                     </div>
                 ))}
