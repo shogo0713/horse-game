@@ -1,6 +1,7 @@
 import type { Phase, Runner } from "../types/game";
 
 type ResultPanelProps = {
+    betType: string;
     phase: Phase;
     runners: Runner[];
     result: Runner[];
@@ -22,7 +23,15 @@ function phaseMessage(phase: Phase): string {
     }
 }
 
-export default function ResultPanel({ phase, runners, result, previousResult, selectedRunner, trioSelectedRunner }: ResultPanelProps) {
+
+export default function ResultPanel({ phase, runners, result, previousResult, selectedRunner, trioSelectedRunner, betType }: ResultPanelProps) {
+  const selectedIds =
+    betType === "WIN" || betType === "PLACE"
+      ? selectedRunner
+        ? [selectedRunner.id]
+        : []
+      : trioSelectedRunner?.map((runner) => runner.id);
+
     return (
         <div className="result_panel">
 
@@ -33,7 +42,7 @@ export default function ResultPanel({ phase, runners, result, previousResult, se
                 <div
                 key={runner.id}
                 className={
-                    phase === "PAYOUT" && (selectedRunner?.id === result[i]?.id || trioSelectedRunner?.some((r) => r.id === result[i]?.id))
+                    phase === "PAYOUT" && (selectedIds?.includes(result[i].id))
                         ? "finishLine finishLine--selected"
                         : "finishLine"
                 }>

@@ -46,6 +46,7 @@ export default function App() {
 
           {/* 結果表示パネル */}
           <ResultPanel
+            betType={betType}
             phase={phase}
             runners={runners}
             result={result}

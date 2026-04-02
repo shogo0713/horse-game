@@ -41,4 +41,4 @@ function calculateTrioPayout(bet: number, threeSelected: Runner[], result: Runne
   const isHit = selectedIds.every((id, i) => id === top3Ids[i]);
 
   return isHit ? Math.floor(trioOdds * bet) : 0;
-}   
+}
