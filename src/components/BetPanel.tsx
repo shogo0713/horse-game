@@ -7,16 +7,25 @@ type BetPanelProps = {
     phase: Phase;
     betstr: string;
     selectedRunner: Runner | null;
+    trioSelectedRunner: Runner[];
     runners: Runner[];
     onChangeBetType: (betType: BET) => void;
     onChangeBet: (value: string) => void;
     onSelectRunner: (runner: Runner) => void;
+    onSetTrioSelectedRunner: (runner: Runner) => void;
     onSetTotalBet: () => void;
     onSubmit: () => void;
 };
 
-export default function BetPanel({ betType, phase, betstr, selectedRunner, runners, onChangeBetType, onChangeBet, onSelectRunner, onSetTotalBet, onSubmit }: BetPanelProps) {
-    return (
+export default function BetPanel({ betType, phase, betstr, selectedRunner, trioSelectedRunner, runners, onChangeBetType, onChangeBet, onSelectRunner, onSetTrioSelectedRunner, onSetTotalBet, onSubmit }: BetPanelProps) {
+  const isIdle = phase === "IDLE";
+
+  const isSubmitDisabled =
+  !isIdle ||
+  (betType !== "TRIO" && selectedRunner === null) ||
+  (betType === "TRIO" && trioSelectedRunner.length !== 3);
+  
+  return (
         <div className="bet_panel">
             <div className="mainTitle">ベット</div>
             <div className="row">
@@ -29,18 +38,29 @@ export default function BetPanel({ betType, phase, betstr, selectedRunner, runne
                 >
                   <option value="WIN"  >単勝</option>
                   <option value="PLACE">複勝</option>
+                  <option value="TRIO" >3連複</option>
                 </select>
               </div>
             <div>
               <div className="bet_panel_label ">馬を選択</div>
               <div className="bet_panel_race_list">
-                {runners.map((r) => (
+
+                {betType !== "TRIO" && runners.map((r) => (
                     <RunnerButton
                         key={r.id}
                         runner={r}
                         isSelected={selectedRunner?.id === r.id}
                         disabled={phase !== "IDLE"}
                         onClick={() => onSelectRunner(r)}
+                    />
+                ))}
+                {betType === "TRIO" && runners.map((r) => (
+                    <RunnerButton
+                        key={r.id}
+                        runner={r}
+                        isSelected={trioSelectedRunner.some((runner) => runner.id === r.id)}
+                        disabled={phase !== "IDLE"}
+                        onClick={() => onSetTrioSelectedRunner(r)}
                     />
                 ))}
               </div>
@@ -58,7 +78,7 @@ export default function BetPanel({ betType, phase, betstr, selectedRunner, runne
               </div>
               <button className="bet_panel_total_bet_button" disabled={phase !== "IDLE"} onClick={onSetTotalBet}>全額賭ける</button>
             </div>
-            <button className="bet_panel_submit_button" disabled={phase !== "IDLE" || selectedRunner === null} onClick={onSubmit}>確定</button>
+            <button className="bet_panel_submit_button" disabled={isSubmitDisabled} onClick={onSubmit}>確定</button>
           </div>
         
     );

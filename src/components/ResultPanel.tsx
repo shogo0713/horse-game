@@ -6,6 +6,7 @@ type ResultPanelProps = {
     result: Runner[];
     previousResult: Runner[];
     selectedRunner: Runner | null;
+    trioSelectedRunner: Runner[] | null;
 }
 
 function phaseMessage(phase: Phase): string {
@@ -21,7 +22,7 @@ function phaseMessage(phase: Phase): string {
     }
 }
 
-export default function ResultPanel({ phase, runners, result, previousResult, selectedRunner }: ResultPanelProps) {
+export default function ResultPanel({ phase, runners, result, previousResult, selectedRunner, trioSelectedRunner }: ResultPanelProps) {
     return (
         <div className="result_panel">
 
@@ -32,7 +33,7 @@ export default function ResultPanel({ phase, runners, result, previousResult, se
                 <div
                 key={runner.id}
                 className={
-                    phase === "PAYOUT" && selectedRunner?.id === result[i]?.id
+                    phase === "PAYOUT" && (selectedRunner?.id === result[i]?.id || trioSelectedRunner?.some((r) => r.id === result[i]?.id))
                         ? "finishLine finishLine--selected"
                         : "finishLine"
                 }>

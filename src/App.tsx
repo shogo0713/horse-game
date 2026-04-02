@@ -16,6 +16,7 @@ export default function App() {
     phase,
     payout,
     selectedRunner,
+    TrioSelectedRunner,
     result,
     previousResult,
     betType,
@@ -23,6 +24,7 @@ export default function App() {
     setBet,
     setBetType,
     setSelectedRunner,
+    toggleTrioSelectedRunner,
     go,
     accept,
     setTotalBet,
@@ -49,6 +51,7 @@ export default function App() {
             result={result}
             previousResult={previousResult}
             selectedRunner={selectedRunner}
+            trioSelectedRunner={TrioSelectedRunner}
           />
 
         </div>
@@ -67,10 +70,12 @@ export default function App() {
             phase={phase}
             betstr={betstr}
             selectedRunner={selectedRunner}
+            trioSelectedRunner={TrioSelectedRunner}
             runners={runners}
             onChangeBetType={setBetType}
             onChangeBet={setBet}
             onSelectRunner={setSelectedRunner}
+            onSetTrioSelectedRunner={toggleTrioSelectedRunner}
             onSetTotalBet={setTotalBet}
             onSubmit={go}
           />
