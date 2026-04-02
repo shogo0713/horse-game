@@ -54,6 +54,7 @@ export default function BetPanel({ betType, phase, betstr, oneSelectedRunner, tr
                         key={r.id}
                         runner={r}
                         isSelected={oneSelectedRunner?.id === r.id}
+                        selectionBadge={null}
                         disabled={phase !== "BETTING"}
                         onClick={() => onSelectRunner(r)}
                     />
@@ -63,19 +64,25 @@ export default function BetPanel({ betType, phase, betstr, oneSelectedRunner, tr
                         key={r.id}
                         runner={r}
                         isSelected={trioSelectedRunner.some((runner) => runner.id === r.id)}
+                        selectionBadge = {null}
                         disabled={phase !== "BETTING"}
                         onClick={() => toggleTrioSelectedRunner(r)}
                     />
                 ))}
-                {betType === "TRIFECTA" && runners.map((r) => (
+                {betType === "TRIFECTA" && runners.map((r) => {
+                  const index = trifectaSelectedRunner.findIndex((runner) => runner.id === r.id);
+                  const isSelected = index !== -1;
+                  const badge = isSelected ? String(index + 1) : null;
+                    return (
                     <RunnerButton
                         key={r.id}
                         runner={r}
                         isSelected={trifectaSelectedRunner.some((runner) => runner.id === r.id)}
+                        selectionBadge={badge}
                         disabled={phase !== "BETTING"}
                         onClick={() => toggleTrifectaSelectedRunner(r)}
                     />
-                ))}
+                );})}
               </div>
             </div>
             <div className="row">
