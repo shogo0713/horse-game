@@ -14,15 +14,26 @@ export function useHorseGame() {
   const [result, setResult] = useState<Runner[]>([]);
   const [previousResult, setPreviousResult] = useState<Runner[]>([]);
   const [betType, setBetType] = useState<BET>("WIN");
+  const [errorMessage, setErrorMessage] = useState("");
 
   function go() {
     if (phase !== "IDLE") return;
 
     const bet = Number(betstr);
-    if (bet <= 0) return;
-    if (bet > money) return;
-    if (selectedRunner === null) return;
+    if (bet <= 0) {
+      setErrorMessage("賭ける金額を入力してください。");
+      return;
+    }
+    if (bet > money) {
+      setErrorMessage("所持金が不足しています。");
+      return;
+    }
+    if (selectedRunner === null) {
+      setErrorMessage("馬を選択してください。");
+      return;
+    }
 
+    setErrorMessage("");
     setMoney((prev) => prev - bet);
     setPhase("DRAWING");
 
@@ -63,6 +74,7 @@ export function useHorseGame() {
     result,
     previousResult,
     betType,
+    errorMessage,
     // actions
     setBet,
     setBetType,

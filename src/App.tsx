@@ -19,6 +19,7 @@ export default function App() {
     result,
     previousResult,
     betType,
+    errorMessage,
     setBet,
     setBetType,
     setSelectedRunner,
@@ -53,6 +54,12 @@ export default function App() {
         </div>
 
         <div className="right_panel">
+
+          {errorMessage && (
+            <p className="error_message" aria-live="polite">
+              {errorMessage}
+            </p>
+          )}
 
           {/* ベットパネル */ }
           <BetPanel
