@@ -430,4 +430,76 @@ button.runner:disabled{
   color: rgba(255,255,255,0.85);
 }
 
+/* モーダル */
+.modal_overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal_content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.modal_close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+}
+.modal_empty {
+  color: #888;
+  text-align: center;
+  padding: 24px 0;
+}
 
+/* 履歴アイテム */
+.history_item {
+  border-top: 1px solid #eee;
+  padding: 12px 0;
+}
+.history_race_no {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 8px;
+}
+.history_result {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.history_row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 14px;
+}
+.history_rank  { color: #888; width: 28px; }
+.history_name  { font-weight: 600; flex: 1; }
+.history_odds  { color: #888; font-size: 12px; }
+
+/* 調子バッジ */
+.history_cond {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.history_cond--hot    { background: #fff0f0; color: #e33; }
+.history_cond--cold   { background: #f0f4ff; color: #36c; }
+.history_cond--normal { background: #f4f4f4; color: #888; }

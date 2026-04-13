@@ -1,12 +1,13 @@
 import "./App.css";
 
+import { useState } from "react";
 import { useHorseGame } from "./hooks/useHorseGame";
+import HistoryModal from "./components/HistoryModal";
 
 import Header from "./components/Header";
 import ResultPanel from "./components/ResultPanel";
 import BetPanel from "./components/BetPanel";
 import PayoutPanel from "./components/PayoutPanel";
-
 
 export default function App() {
   const {
@@ -18,23 +19,37 @@ export default function App() {
     selectedRunner,
     TrioSelectedRunner,
     TrifectaSelectedRunner,
+    QuinellaSelectedRunner,
+    ExactaSelectedRunner,
     result,
     previousResult,
     betType,
     errorMessage,
+    conditionById,
+    raceHistory,
     setBet,
     setBetType,
     setSelectedRunner,
     toggleTrioSelectedRunner,
     toggleTrifectaSelectedRunner,
+    toggleQuinellaSelectedRunner,
+    toggleExactaSelectedRunner,
     go,
     accept,
     setTotalBet,
     resetMoney,
   } = useHorseGame();
 
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
   return (
     <div className="app">
+
+      <HistoryModal
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+        history={raceHistory}
+      />
       
       {/* ヘッダー部分 */}
       <Header
@@ -56,7 +71,15 @@ export default function App() {
             oneSelectedRunner={selectedRunner}
             trioSelectedRunner={TrioSelectedRunner}
             trifectaSelectedRunner={TrifectaSelectedRunner}
+            quinellaSelectedRunner={QuinellaSelectedRunner}
+            exactaSelectedRunner={ExactaSelectedRunner}
           />
+
+      <button
+        className="history_button"
+        onClick={() => setIsHistoryOpen(true)}
+      > 📋 履歴
+      </button>
 
         </div>
 
@@ -70,18 +93,23 @@ export default function App() {
 
           {/* ベットパネル */ }
           <BetPanel
+            conditionById={conditionById}
             betType={betType}
             phase={phase}
             betstr={betstr}
             oneSelectedRunner={selectedRunner}
             trioSelectedRunner={TrioSelectedRunner}
             trifectaSelectedRunner={TrifectaSelectedRunner}
+            quinellaSelectedRunner={QuinellaSelectedRunner}
+            exactaSelectedRunner={ExactaSelectedRunner}
             runners={runners}
             onChangeBetType={setBetType}
             onChangeBet={setBet}
             onSelectRunner={setSelectedRunner}
             toggleTrioSelectedRunner={toggleTrioSelectedRunner}
             toggleTrifectaSelectedRunner={toggleTrifectaSelectedRunner}
+            toggleQuinellaSelectedRunner={toggleQuinellaSelectedRunner}
+            toggleExactaSelectedRunner={toggleExactaSelectedRunner}
             onSetTotalBet={setTotalBet}
             onSubmit={go}
           />

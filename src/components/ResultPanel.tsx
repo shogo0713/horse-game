@@ -9,6 +9,8 @@ type ResultPanelProps = {
     oneSelectedRunner: Runner | null;
     trioSelectedRunner: Runner[];
     trifectaSelectedRunner: Runner[];
+    quinellaSelectedRunner: Runner[];
+    exactaSelectedRunner: Runner[];
 }
 
 function phaseMessage(phase: Phase): string {
@@ -23,7 +25,7 @@ function phaseMessage(phase: Phase): string {
 }
 
 
-export default function ResultPanel({ phase, runners, result, previousResult, oneSelectedRunner, trioSelectedRunner, trifectaSelectedRunner, betType }: ResultPanelProps) {
+export default function ResultPanel({ phase, runners, result, previousResult, oneSelectedRunner, trioSelectedRunner, trifectaSelectedRunner, quinellaSelectedRunner, exactaSelectedRunner, betType }: ResultPanelProps) {
   const selectedIds =
     betType === "WIN" || betType === "PLACE"
       ? oneSelectedRunner
@@ -31,7 +33,13 @@ export default function ResultPanel({ phase, runners, result, previousResult, on
         : []
       : betType === "TRIO"
         ? trioSelectedRunner.map((runner) => runner.id)
-        : trifectaSelectedRunner.map((runner) => runner.id);
+        : betType === "TRIFECTA"
+          ? trifectaSelectedRunner.map((runner) => runner.id)
+          : betType === "QUINELLA"
+            ? quinellaSelectedRunner.map((runner) => runner.id)
+            : betType === "EXACTA"
+              ? exactaSelectedRunner.map((runner) => runner.id)
+              : [];
 
     return (
         <div className="result_panel">
