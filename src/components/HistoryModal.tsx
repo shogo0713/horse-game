@@ -26,7 +26,7 @@ export default function HistoryModal({ isOpen, onClose, history }: Props) {
               <h3 className="history_race_no">{history.indexOf(h) + 1} 回前</h3>
               <ol className="history_result">
                 {h.result.map((r, i) => {
-                  {/*const cond = h.conditions[r.id];*/}
+                  /*const cond = h.conditions[r.id];*/
                   return (
                     <li key={r.id} className="history_row">
                       <span className="history_rank">{i + 1}着</span>
