@@ -202,6 +202,7 @@ export function useHorseGame() {
     shuffleConditions();
 
     // 既存のリセット処理...
+    setMoney((prev) => prev + payout);
     setPhase("BETTING");
     setPayout(0);
   }
